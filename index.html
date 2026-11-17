@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ENTRO — межкомнатные двери</title>
+<meta name="description" content="ENTRO — фабрика межкомнатных дверей с эксклюзивным и индивидуальным дизайном.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vendor/swiper-bundle.min.css">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="is-loading">
+
+<!-- ============ ЗАСТАВКА ============ -->
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="splash__glow"></div>
+  <div class="splash__inner">
+    <div class="splash__word">ENTRO</div>
+    <div class="splash__sub"><span class="splash__rule"></span><span class="splash__doors">doors</span><span class="splash__rule"></span></div>
+  </div>
+</div>
+
+<!-- ============ ШАПКА ============ -->
+<header class="header" id="header">
+  <div class="u-wrap header__inner">
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span></button>
+    <nav class="nav">
+      <a href="#">Главная</a>
+      <a href="#collections">Каталог</a>
+      <a href="#mission">Компания</a>
+      <a href="#">Стать дилером</a>
+      <a href="#footer">Контакты</a>
+    </nav>
+    <a class="logo header__logo" href="#" aria-label="ENTRO doors">
+      <svg class="logo__mark" viewBox="0 0 128 133" aria-hidden="true">
+        <rect x="0" y="0" width="62" height="13"/><rect x="0" y="24" width="62" height="13"/>
+        <rect x="0" y="48" width="62" height="13"/><rect x="0" y="72" width="62" height="13"/>
+        <rect x="0" y="96" width="62" height="13"/><rect x="0" y="120" width="62" height="13"/>
+        <rect x="74" y="0" width="10" height="133"/><rect x="96" y="0" width="10" height="133"/>
+        <rect x="118" y="0" width="10" height="133"/>
+      </svg>
+      <span class="logo__type">
+        <span class="logo__word">ENTRO</span>
+        <span class="logo__sub"><i class="logo__rule"></i><span class="logo__doors">doors</span></span>
+      </span>
+    </a>
+    <div class="header__actions">
+      <button class="icon-btn" aria-label="Поиск">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Личный кабинет">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1.4-3.6 4-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="drawer" id="drawer">
+  <a href="#">Главная</a>
+  <a href="#collections">Каталог</a>
+  <a href="#mission">Компания</a>
+  <a href="#">Стать дилером</a>
+  <a href="#footer">Контакты</a>
+  <div class="drawer__foot">
+    <a href="tel:+79877350040">8 987 735 00 40</a>
+    <a href="mailto:Zakaz@entro-design.ru">Zakaz@entro-design.ru</a>
+  </div>
+</nav>
+
+<main>
+<!-- ============ ГЛАВНЫЙ ЭКРАН ============ -->
+<section class="hero" id="hero">
+  <div class="hero__media">
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.jpg">
+      <source src="assets/hero.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero__scrim"></div>
+
+  <div class="hero__body">
+    <div class="u-wrap">
+      <div class="hero__text">
+        <div class="u-kicker hero__kicker">Фабрика дизайнерских дверей · с 2022 года</div>
+        <h1>
+          <span class="ln"><i>Межкомнатные двери</i></span>
+          <span class="ln"><i>с эксклюзивным</i></span>
+          <span class="ln"><i>дизайном</i></span>
+        </h1>
+        <div class="hero__cta">
+          <a class="btn btn--solid" href="#collections">Смотреть каталог</a>
+          <a class="btn" href="#showcase">Витрина коллекций</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- двери вместо людей -->
+  <div class="lineup">
+    <div class="lineup__floor"></div>
+    <div class="lineup__track" id="lineup"></div>
+  </div>
+
+  <div class="hero__scroll"><span>Листайте</span><i></i></div>
+</section>
+
+<!-- ============ МИССИЯ ============ -->
+<section class="mission" id="mission">
+  <div class="mission__inner u-wrap">
+    <div class="u-kicker reveal">Миссия компании</div>
+    <h2 class="reveal" data-d="1">Мы создаём двери,<br>которые запоминают</h2>
+    <p class="reveal" data-d="2">С 2022 года компания ENTRO создаёт межкомнатные двери с эксклюзивным и индивидуальным дизайном, уделяя особое внимание стилю и делая акцент на деталях. Результат такого подхода — неповторимые продукты, которые создаёт команда ENTRO.</p>
+    <div class="mission__rule reveal" data-d="3"></div>
+  </div>
+</section>
+
+<!-- ============ ДВЕ КОЛЛЕКЦИИ ============ -->
+<section class="collections" id="collections">
+  <div class="u-wrap">
+    <div class="collections__head">
+      <div>
+        <div class="u-kicker reveal">Коллекции 2026</div>
+        <h2 class="reveal" data-d="1">Две новые линии</h2>
+      </div>
+      <a class="btn reveal" data-d="2" href="#">Весь каталог</a>
+    </div>
+
+    <div class="collections__grid">
+      <a class="panel" href="#" data-panel>
+        <div class="panel__media"><img class="panel__img" src="assets/aria.jpg" alt="Коллекция ARIA" loading="lazy"></div>
+        <div class="panel__grad"></div>
+        <span class="panel__shutter panel__shutter--l"></span>
+        <span class="panel__shutter panel__shutter--r"></span>
+        <span class="logo panel__logo">
+          <svg class="logo__mark" viewBox="0 0 128 133" aria-hidden="true">
+            <rect x="0" y="0" width="62" height="13"/><rect x="0" y="24" width="62" height="13"/>
+            <rect x="0" y="48" width="62" height="13"/><rect x="0" y="72" width="62" height="13"/>
+            <rect x="0" y="96" width="62" height="13"/><rect x="0" y="120" width="62" height="13"/>
+            <rect x="74" y="0" width="10" height="133"/><rect x="96" y="0" width="10" height="133"/>
+            <rect x="118" y="0" width="10" height="133"/>
+          </svg>
+          <span class="logo__type">
+            <span class="logo__word">ENTRO</span>
+            <span class="logo__sub"><i class="logo__rule"></i><span class="logo__doors">doors</span></span>
+          </span>
+        </span>
+        <span class="panel__name">ARIA</span>
+        <span class="panel__foot"><i></i>Смотреть коллекцию</span>
+      </a>
+
+      <a class="panel panel--built" href="#" data-panel>
+        <div class="panel__media">
+          <span class="panel__bg"><img class="panel__img" src="assets/zero-bg.jpg" alt="" loading="lazy"></span>
+          <span class="panel__halo"></span>
+          <img class="panel__door" src="assets/doors/zero-01.png" alt="Коллекция ZERO" loading="lazy">
+        </div>
+        <div class="panel__grad"></div>
+        <span class="panel__shutter panel__shutter--l"></span>
+        <span class="panel__shutter panel__shutter--r"></span>
+        <span class="logo panel__logo">
+          <svg class="logo__mark" viewBox="0 0 128 133" aria-hidden="true">
+            <rect x="0" y="0" width="62" height="13"/><rect x="0" y="24" width="62" height="13"/>
+            <rect x="0" y="48" width="62" height="13"/><rect x="0" y="72" width="62" height="13"/>
+            <rect x="0" y="96" width="62" height="13"/><rect x="0" y="120" width="62" height="13"/>
+            <rect x="74" y="0" width="10" height="133"/><rect x="96" y="0" width="10" height="133"/>
+            <rect x="118" y="0" width="10" height="133"/>
+          </svg>
+          <span class="logo__type">
+            <span class="logo__word">ENTRO</span>
+            <span class="logo__sub"><i class="logo__rule"></i><span class="logo__doors">doors</span></span>
+          </span>
+        </span>
+        <span class="panel__name">ZERO</span>
+        <span class="panel__foot"><i></i>Смотреть коллекцию</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ВИТРИНА-БАРАБАН ============ -->
+<section class="showcase" id="showcase">
+  <div class="u-wrap">
+    <div class="showcase__head">
+      <div class="u-kicker reveal">Витрина</div>
+      <h2 class="reveal" data-d="1">Двери меняются</h2>
+    </div>
+
+    <div class="reel">
+      <div class="reel__stage" id="stage">
+        <div class="reel__floor"></div>
+        <div class="swiper drum" id="drum">
+          <div class="swiper-wrapper" id="drumWrap"></div>
+        </div>
+      </div>
+
+      <aside class="reel__panel" id="panel">
+        <div class="reel__label">В этой модели</div>
+        <h3 id="reelName">ARIA</h3>
+        <ul class="reel__specs" id="reelSpecs"></ul>
+        <a class="btn reel__cta" href="#collections">Смотреть коллекцию</a>
+      </aside>
+    </div>
+
+    <div class="reel__bar">
+      <div class="reel__count" id="reelCount">01 / 06</div>
+      <div class="reel__progress"><i id="reelProgress"></i></div>
+      <div class="reel__nav">
+        <button class="reel__btn" id="prev" aria-label="Предыдущая дверь">
+          <svg viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg>
+        </button>
+        <button class="reel__btn" id="next" aria-label="Следующая дверь">
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="showcase__hint">Потяните ленту или листайте стрелками</div>
+  </div>
+</section>
+</main>
+
+<!-- ============ ПОДВАЛ ============ -->
+<footer class="footer" id="footer">
+  <div class="u-wrap">
+    <div class="footer__grid">
+      <div class="footer__col">
+        <span class="logo" style="margin-bottom:22px">
+          <svg class="logo__mark" viewBox="0 0 128 133" aria-hidden="true">
+            <rect x="0" y="0" width="62" height="13"/><rect x="0" y="24" width="62" height="13"/>
+            <rect x="0" y="48" width="62" height="13"/><rect x="0" y="72" width="62" height="13"/>
+            <rect x="0" y="96" width="62" height="13"/><rect x="0" y="120" width="62" height="13"/>
+            <rect x="74" y="0" width="10" height="133"/><rect x="96" y="0" width="10" height="133"/>
+            <rect x="118" y="0" width="10" height="133"/>
+          </svg>
+          <span class="logo__type">
+            <span class="logo__word">ENTRO</span>
+            <span class="logo__sub"><i class="logo__rule"></i><span class="logo__doors">doors</span></span>
+          </span>
+        </span>
+        <p style="margin-top:22px">ООО «ЭНТРО»</p>
+        <p>Чувашская Республика,<br>г. Новочебоксарск, ул. Промышленная, 52</p>
+      </div>
+      <div class="footer__col">
+        <h4>Контакты</h4>
+        <a class="footer__tel" href="tel:+79877350040">8 987 735 00 40</a>
+        <a class="footer__tel" href="tel:+79199727942">8 919 972 79 42</a>
+        <a href="mailto:Zakaz@entro-design.ru">Zakaz@entro-design.ru</a>
+      </div>
+      <div class="footer__col">
+        <h4>Меню</h4>
+        <a href="#collections">Межкомнатные двери</a>
+        <a href="#">Стеновые панели</a>
+        <a href="#">Декоративные рейки</a>
+        <a href="#">Погонажные изделия</a>
+        <a href="#mission">О компании</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© ООО «ЭНТРО», 2026</span>
+      <span>Политика обработки персональных данных</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/vendor/swiper-bundle.min.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
