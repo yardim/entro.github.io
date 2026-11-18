@@ -2,6 +2,33 @@
   "use strict";
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- блокировка прокрутки ---------- */
+  /* при overflow:hidden полоса прокрутки исчезает и страница расширяется — логотип и контент
+     дёргаются вбок. Вместо неё ставим отступ той же ширины (--lock-pad), а фоны заставки,
+     меню и шапки остаются на всю ширину окна, поэтому пустой полосы справа нет */
+  var root = document.documentElement;
+  var scrollbarWidth = function(){
+    var d = document.createElement("div");
+    d.style.cssText = "position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll";
+    document.body.appendChild(d);
+    var w = d.offsetWidth - d.clientWidth;
+    document.body.removeChild(d);
+    return w;
+  };
+  var locks = 0;
+  function lockScroll(on){
+    locks = Math.max(0, locks + (on ? 1 : -1));
+    if(locks){
+      /* отступ нужен, только если полоса прокрутки на странице вообще есть */
+      var pad = root.scrollHeight > window.innerHeight ? scrollbarWidth() : 0;
+      root.style.setProperty("--lock-pad", pad + "px");
+      document.body.style.overflow = "hidden";
+    } else {
+      root.style.setProperty("--lock-pad", "0px");
+      document.body.style.overflow = "";
+    }
+  }
+
   /* нативный drag&drop картинок выключаем — мешает перетаскиванию барабана и ленты */
   document.addEventListener("dragstart", function(e){
     if(e.target && e.target.tagName === "IMG") e.preventDefault();
@@ -20,10 +47,12 @@
 
   /* ---------- заставка ---------- */
   var splash = document.getElementById("splash");
+  lockScroll(true);
   function hideSplash(){
     if(splash.classList.contains("is-hidden")) return;
     splash.classList.add("is-hidden");
     document.body.classList.remove("is-loading");
+    lockScroll(false);
     var v = document.getElementById("heroVideo");
     if(v && v.paused){ v.play().catch(function(){}); }
   }
@@ -39,13 +68,13 @@
   burger.addEventListener("click", function(){
     var open = drawer.classList.toggle("is-open");
     burger.setAttribute("aria-expanded", open ? "true" : "false");
-    document.body.style.overflow = open ? "hidden" : "";
+    lockScroll(open);
   });
   drawer.addEventListener("click", function(e){
-    if(e.target.tagName === "A"){
+    if(e.target.tagName === "A" && drawer.classList.contains("is-open")){
       drawer.classList.remove("is-open");
       burger.setAttribute("aria-expanded","false");
-      document.body.style.overflow = "";
+      lockScroll(false);
     }
   });
 

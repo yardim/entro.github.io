@@ -14,14 +14,14 @@
   --ease-soft:cubic-bezier(.16,1,.3,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-/* место под скроллбар всегда зарезервировано: иначе, когда заставка снимает
-   overflow:hidden, появляется полоса прокрутки, окно сужается и логотип дёргается вбок */
-html{scroll-behavior:smooth;scrollbar-gutter:stable}
+/* --lock-pad — ширина полосы прокрутки, пока прокрутка заблокирована (см. lockScroll в app.js):
+   контент сохраняет ширину и не дёргается, когда полоса исчезает или появляется */
+html{scroll-behavior:smooth;--lock-pad:0px}
 body{
   margin:0;background:var(--ink);color:var(--text);
   font-family:Montserrat,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-weight:300;line-height:1.6;
-  overflow-x:hidden;
+  overflow-x:hidden;padding-right:var(--lock-pad);
 }
 img,video{display:block;max-width:100%}
 /* запрет нативного перетаскивания картинок: иначе при драге барабана
@@ -51,6 +51,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    и только потом проявляется логотип */
 .splash{
   position:fixed;inset:0;z-index:999;background:#060D0F;overflow:hidden;
+  padding-right:var(--lock-pad); /* логотип по центру страницы без полосы прокрутки */
   display:grid;place-items:center;
   transition:opacity .9s var(--ease),visibility .9s;
 }
@@ -105,6 +106,7 @@ body.is-loading{overflow:hidden}
 /* ---------- header ---------- */
 .header{
   position:fixed;top:0;left:0;right:0;z-index:100;height:var(--header-h);
+  padding-right:var(--lock-pad);
   display:flex;align-items:center;
   transition:background .5s var(--ease),border-color .5s var(--ease),height .4s var(--ease);
   border-bottom:1px solid transparent;
@@ -137,14 +139,20 @@ body.is-loading{overflow:hidden}
 .icon-btn:hover{color:var(--text);background:rgba(237,239,239,.08)}
 .icon-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.2}
 .burger{display:none;width:38px;height:38px;place-items:center}
-.burger span{display:block;width:20px;height:1px;background:currentColor;position:relative;transition:transform .4s var(--ease)}
-.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:20px;height:1px;background:currentColor;transition:transform .4s var(--ease)}
+.burger span{display:block;width:20px;height:1px;background:currentColor;position:relative;transition:background-color 0s .25s}
+/* закрытие: сначала разворот из креста, потом расхождение полосок */
+.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:20px;height:1px;background:currentColor;transition:transform .25s var(--ease),top .2s var(--ease) .25s}
 .burger span::before{top:-6px}.burger span::after{top:6px}
+/* открытие: полоски сходятся к центру, средняя исчезает, затем поворот в крест */
+.burger[aria-expanded="true"] span{background-color:transparent;transition-delay:.2s}
+.burger[aria-expanded="true"] span::before,.burger[aria-expanded="true"] span::after{top:0;transition:top .2s var(--ease),transform .25s var(--ease) .2s}
+.burger[aria-expanded="true"] span::before{transform:rotate(45deg)}
+.burger[aria-expanded="true"] span::after{transform:rotate(-45deg)}
 
 /* mobile drawer */
 .drawer{
   position:fixed;inset:0;z-index:99;background:linear-gradient(180deg,var(--deep),var(--teal));
-  padding:calc(var(--header-h) + 32px) 24px 40px;
+  padding:calc(var(--header-h) + 32px) calc(24px + var(--lock-pad)) 40px 24px;
   display:flex;flex-direction:column;gap:6px;
   opacity:0;visibility:hidden;transform:translateY(-12px);
   transition:opacity .45s var(--ease),transform .45s var(--ease),visibility .45s;
