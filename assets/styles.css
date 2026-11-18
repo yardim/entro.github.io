@@ -6,18 +6,21 @@
   --paper:#F3F1ED;
   --gold:#DAB771;
   --text:#EDEFEF;
-  --muted:rgba(237,239,239,.62);
+  --muted:#969A9B; /* то же, что rgba(237,239,239,.62) на --ink, но сплошной: тонкий текст через прозрачность бледнеет */
+  --small-weight:500; /* мелкий капс и разрядка: 300 на тёмном фоне выглядит рвано */
   --line:rgba(237,239,239,.16);
   --header-h:76px;
   --ease:cubic-bezier(.22,.61,.36,1);
   --ease-soft:cubic-bezier(.16,1,.3,1);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
+/* место под скроллбар всегда зарезервировано: иначе, когда заставка снимает
+   overflow:hidden, появляется полоса прокрутки, окно сужается и логотип дёргается вбок */
+html{scroll-behavior:smooth;scrollbar-gutter:stable}
 body{
   margin:0;background:var(--ink);color:var(--text);
   font-family:Montserrat,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;
+  font-weight:300;line-height:1.6;
   overflow-x:hidden;
 }
 img,video{display:block;max-width:100%}
@@ -29,7 +32,7 @@ a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .u-kicker{
   font-size:11px;letter-spacing:.34em;text-transform:uppercase;
-  font-weight:400;color:var(--muted);
+  font-weight:var(--small-weight);color:var(--muted);
 }
 .u-wrap{width:min(1440px,100% - 48px);margin-inline:auto}
 @media(max-width:700px){.u-wrap{width:calc(100% - 32px)}}
@@ -41,7 +44,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .logo__word{font-size:20px;font-weight:300;letter-spacing:.3em;margin-right:-.3em}
 .logo__sub{display:flex;align-items:center;gap:7px;width:100%}
 .logo__rule{flex:1;height:1px;background:currentColor;opacity:.55}
-.logo__doors{font-size:8px;letter-spacing:.3em;text-transform:lowercase;opacity:.85}
+.logo__doors{font-size:8px;font-weight:var(--small-weight);letter-spacing:.3em;text-transform:lowercase;opacity:.85}
 
 /* ---------- splash ---------- */
 /* как в референсе: тёмный экран, снизу поднимается свечение до середины,
@@ -72,19 +75,28 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
 }
-.splash__inner{position:relative;z-index:2;text-align:center;transform:translateY(-3vh)}
+/* сдвиг округлён до целого пикселя: при дробном положении мелкая подпись
+   в конце анимации «доезжает» до пиксельной сетки и дёргается */
+.splash__inner{position:relative;z-index:2;text-align:center;
+  transform:translateY(-3vh);transform:translateY(round(-3vh,1px))}
 .splash__word{
   font-size:clamp(34px,7vw,64px);font-weight:200;letter-spacing:.56em;text-indent:.56em;
   color:#fff;opacity:0;animation:splashIn 1.3s var(--ease-soft) .95s forwards;
 }
 .splash__sub{
   margin-top:18px;display:flex;align-items:center;justify-content:center;gap:12px;
-  opacity:0;animation:splashIn 1s var(--ease-soft) 1.45s forwards;
+  opacity:0;animation:splashSubIn 1s var(--ease-soft) 1.45s forwards;
+  will-change:transform,opacity; /* слой не пересоздаётся в конце анимации */
 }
 .splash__rule{width:64px;height:1px;background:rgba(255,255,255,.5)}
-.splash__doors{font-size:10px;letter-spacing:.42em;color:rgba(255,255,255,.82)}
+.splash__doors{font-size:10px;letter-spacing:4px;color:rgba(255,255,255,.82)}
 @keyframes splashIn{
   from{opacity:0;letter-spacing:.74em;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+/* подпись — только целые пиксели, без em */
+@keyframes splashSubIn{
+  from{opacity:0;transform:translateY(6px)}
   to{opacity:1;transform:translateY(0)}
 }
 .splash.is-hidden{opacity:0;visibility:hidden}
@@ -175,7 +187,7 @@ body.is-loading{overflow:hidden}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .btn{
   display:inline-flex;align-items:center;gap:12px;padding:15px 30px;border:1px solid var(--line);
-  font-size:11px;letter-spacing:.24em;text-transform:uppercase;border-radius:2px;
+  font-size:11px;letter-spacing:.24em;text-transform:uppercase;border-radius:2px;font-weight:var(--small-weight);
   transition:border-color .4s var(--ease),background .4s var(--ease),color .4s var(--ease);
 }
 .btn:hover{border-color:var(--gold);color:var(--gold)}
@@ -188,6 +200,7 @@ body.is-loading{overflow:hidden}
   position:relative;z-index:2;
   display:flex;align-items:flex-end;justify-content:center;gap:clamp(10px,2.2vw,34px);
   height:clamp(190px,33vh,340px);
+  width:fit-content;max-width:100%;margin-inline:auto; /* hover только над дверями, не над всей полосой */
   will-change:transform;
 }
 .door{
@@ -215,7 +228,7 @@ body.is-loading{overflow:hidden}
 }
 .lineup__track:hover .door{opacity:.42;filter:saturate(.7)}
 .lineup__track .door:hover{opacity:1;filter:none;transform:translateY(-14px)}
-.door:hover .door__name{opacity:1;transform:translate(-50%,0)}
+.door:hover .door__name{opacity:1;transform:translate(-50%,0);transition-delay:.3s} /* надпись — после подъёма двери */
 .lineup__floor{
   position:absolute;left:0;right:0;bottom:0;height:190px;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,transparent,rgba(7,15,17,.55) 45%,rgba(7,15,17,.95));
@@ -223,7 +236,7 @@ body.is-loading{overflow:hidden}
 .hero__scroll{
   position:absolute;right:max(24px,calc((100vw - 1440px)/2));bottom:26px;z-index:3;
   display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:.3em;
-  text-transform:uppercase;color:var(--muted);
+  text-transform:uppercase;color:var(--muted);font-weight:var(--small-weight);
 }
 .hero__scroll i{display:block;width:44px;height:1px;background:currentColor;position:relative;overflow:hidden}
 .hero__scroll i::after{content:"";position:absolute;inset:0;background:var(--gold);transform:translateX(-100%);animation:scrollLine 2.6s var(--ease) infinite}
@@ -358,14 +371,14 @@ body.is-loading{overflow:hidden}
 }
 .reel__panel{display:flex;flex-direction:column;justify-content:flex-end;
   border-left:1px solid var(--line);padding-left:clamp(18px,2vw,30px)}
-.reel__label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.reel__label{font-size:10px;font-weight:var(--small-weight);letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
 .reel__panel h3{margin:0;font-weight:200;font-size:clamp(26px,3vw,40px);letter-spacing:.18em;
   transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .reel__specs{margin:24px 0 0;padding:0;list-style:none;
   transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .reel__specs li{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:11px 0;
   border-bottom:1px solid rgba(237,239,239,.08);font-size:13px;color:rgba(237,239,239,.84)}
-.reel__specs span{color:var(--muted);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+.reel__specs span{color:var(--muted);font-weight:var(--small-weight);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
 .reel__panel.is-swap h3,.reel__panel.is-swap .reel__specs{opacity:0;transform:translateY(8px)}
 .reel__cta{margin-top:26px;align-self:flex-start}
 .reel__bar{display:flex;align-items:center;gap:clamp(14px,2vw,26px);margin-top:clamp(22px,3vw,38px)}
@@ -421,7 +434,8 @@ body.is-loading{overflow:hidden}
   .hero h1{font-size:28px}
   .hero__body{align-items:flex-end;padding-bottom:18px}
   .lineup__track{
-    height:clamp(150px,24svh,210px);gap:10px;
+    /* +18px сверху — запас под подъём двери, иначе overflow-x:auto обрезает её */
+    height:calc(clamp(150px,24svh,210px) + 18px);padding-top:18px;gap:10px;width:auto;
     justify-content:flex-start;overflow-x:auto;overflow-y:hidden;
     padding-inline:16px;scroll-snap-type:x proximity;
     -webkit-overflow-scrolling:touch;scrollbar-width:none;

@@ -56,6 +56,12 @@
     el.className = "door";
     el.innerHTML = '<img src="'+d.img+'" alt="Полотно коллекции '+d.name+', модель '+d.model+'"><span class="door__name">'+d.name+'</span>';
     el.style.transitionDelay = (0.5 + i*0.09) + "s";
+    /* задержка нужна только для появления — потом убираем, чтобы hover срабатывал сразу */
+    el.addEventListener("transitionend", function clear(e){
+      if(e.target !== el || !el.classList.contains("is-in")) return;
+      el.style.transitionDelay = "";
+      el.removeEventListener("transitionend", clear);
+    });
     lineup.appendChild(el);
   });
   setTimeout(function(){
