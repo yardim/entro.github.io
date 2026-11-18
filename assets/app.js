@@ -35,14 +35,14 @@
   });
 
   /* ---------- данные коллекций ---------- */
-  /* полотна — рендеры 3D-моделей фабрики (FBX с Яндекс.Диска), номер = модель в сцене */
+  /* полотна — рендеры фабрики с их сайта (entro-design.ru), водяной знак убран, см. _ref/renders/doors.py */
   var DOORS = [
-    {name:"ARIA",  model:"02", size:"800 × 2200 мм", thickness:"38 мм", img:"assets/doors/aria-01.png"},
-    {name:"ZERO",  model:"04", size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/zero-01.png"},
-    {name:"MAGIC", model:"07", size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/magic-01.png"},
-    {name:"ARIA",  model:"09", size:"800 × 2200 мм", thickness:"38 мм", img:"assets/doors/aria-02.png"},
-    {name:"ZERO",  model:"02", size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/zero-02.png"},
-    {name:"MAGIC", model:"12", size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/magic-02.png"}
+    {name:"ARIA",  model:"8",    size:"800 × 2200 мм", thickness:"38 мм", img:"assets/doors/aria-8.webp"},
+    {name:"ZERO",  model:"3 DO", size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/zero-3do.webp"},
+    {name:"MAGIC", model:"10",   size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/magic-10.webp"},
+    {name:"ARIA",  model:"11",   size:"800 × 2200 мм", thickness:"38 мм", img:"assets/doors/aria-11.webp"},
+    {name:"ZERO",  model:"1 DG", size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/zero-1dg.webp"},
+    {name:"MAGIC", model:"6",    size:"800 × 2000 мм", thickness:"38 мм", img:"assets/doors/magic-6.webp"}
   ];
 
   /* ---------- заставка ---------- */
@@ -129,6 +129,19 @@
   /* Открываются сразу, как только блок появляется в кадре, и обе одновременно:
      первая же попавшая в кадр панель раскрывает весь ряд, иначе доли пикселя
      в геометрии дают разное время старта. */
+  /* параллакс фона панелей коллекций: Rellax, сдвиг округляется до целых px.
+     center — в нуле, когда панель по центру экрана; максимум сдвига = |speed| × 50 px
+     у краёв экрана, под каждую ширину он меньше запаса фона (15% высоты панели) */
+  if(!reduce && window.Rellax){
+    document.querySelectorAll("[data-parallax]").forEach(function(el){
+      el.setAttribute("data-rellax-xs-speed", "-0.8");     /* < 576 */
+      el.setAttribute("data-rellax-mobile-speed", "-1");   /* 576–767 */
+      el.setAttribute("data-rellax-tablet-speed", "-1.2"); /* 768–1200 */
+      el.setAttribute("data-rellax-desktop-speed", "-2");  /* ≥ 1201 */
+    });
+    new Rellax("[data-parallax]", {center:true, round:true});
+  }
+
   var panels = document.querySelectorAll("[data-panel]");
   if(panels.length){
     document.documentElement.classList.add("has-reveal");
@@ -164,7 +177,7 @@
 
   var STEP = 28;                 /* градусов цилиндра на одно полотно */
   var GAP = 1.3;                 /* шаг по дуге в ширинах самого полотна: с запасом, чтобы не слипались */
-  var DOOR_RATIO = 2.5;          /* высота к ширине у рендеров (2.5 и 2.75) */
+  var DOOR_RATIO = 2.16;         /* высота к ширине у самого широкого рендера (ZERO 2.16, MAGIC 2.27, ARIA 2.5) */
 
   function smooth(x){ x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }  /* без изломов на концах */
 
@@ -186,9 +199,13 @@
       if(!face) return;
       var p = Math.max(-5, Math.min(5, slide.progress));   /* правее центра прогресс отрицательный */
       var a = -p * STEP, rad = a * Math.PI / 180;
-      var x = center - slide.swiperSlideOffset + R * Math.sin(rad);
+      var x = R * Math.sin(rad);
       var z = R * Math.cos(rad) - R;               /* центральное полотно на z = 0, боковые уходят назад */
-      slide.style.transform =
+      /* два слоя: слайд без анимации только снимает своё место в ленте (оно меняется, когда loop
+         переставляет слайды), а положение на цилиндре — у face, и анимируется только оно.
+         Иначе перестановка посреди вращения дёргала бы барабан на ширину полотна */
+      slide.style.transform = "translate3d(" + (center - slide.swiperSlideOffset).toFixed(1) + "px,0,0)";
+      face.style.transform =
         "translate3d(" + x.toFixed(1) + "px,0," + z.toFixed(1) + "px) rotateY(" + a.toFixed(2) + "deg)";
 
       var ap = Math.abs(p);
@@ -227,6 +244,9 @@
     virtualTranslate: true,      /* ленту не двигаем — положение полотен считаем сами */
     slideToClickedSlide: true,
     threshold: 4,
+    /* клики по стрелкам во время вращения не теряются: каждый сдвигает цель ещё на одно полотно,
+       и барабан доворачивает до неё одним движением */
+    loopPreventsSliding: false,
     keyboard: {enabled: true},
     navigation: {prevEl: "#prev", nextEl: "#next"},
     on: {
@@ -236,15 +256,22 @@
       breakpoint: function(sw){ arrange(sw); },
       /* под пальцем барабан идёт за движением мгновенно (duration = 0),
          а на доводке и стрелках крутится плавно */
+      /* loop перед шагом переставляет слайды и внутри зовёт slideTo(…, 0) — это обнулило бы
+         переход и оборвало вращение, если клик пришёл посреди него. На время перестановки
+         длительности не трогаем: полотна продолжают ехать к текущей цели */
+      beforeLoopFix: function(sw){ sw.drumLoopFix = true; },
+      loopFix: function(sw){ sw.drumLoopFix = false; },
       setTransition: function(sw, d){      /* в params.on первым аргументом Swiper всегда передаёт сам инстанс */
+        if(sw.drumLoopFix) return;
+        var fd = (d ? Math.round(d * 1.2) : 0) + "ms";
         sw.slides.forEach(function(slide){
-          slide.style.transitionDuration = d + "ms";
           var face = slide.firstElementChild;
-          if(face) face.style.transitionDuration = (d ? Math.round(d * 1.2) : 0) + "ms";
+          /* порядок как в transition-property у .drum__face: transform, opacity, filter */
+          if(face) face.style.transitionDuration = d + "ms," + fd + "," + fd;
         });
         /* лента при virtualTranslate не едет, значит и transitionend от неё не придёт.
-           Без этого Swiper остаётся в состоянии animating, loopPreventsSliding блокирует
-           следующий шаг — и стрелки срабатывают ровно один раз. Закрываем переход сами. */
+           Без этого Swiper навсегда остаётся в состоянии animating (не приходят события
+           конца перехода, мешает перетаскиванию). Закрываем переход сами, когда полотна доехали. */
         clearTimeout(sw.drumSettle);
         if(d) sw.drumSettle = setTimeout(function(){
           if(!sw.destroyed && sw.animating) sw.transitionEnd();
